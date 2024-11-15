@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styling.css">
+    <title>kalkulator sederhana</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url(foto.png);
+        }
+        .calculator {
+            background-color: #5b758d;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .display {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            padding: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button onclick="setOperation('/')">/</button>
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button onclick="setOperation('*')">*</button>
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button onclick="setOperation('-')">-</button>
+            <button onclick="appendNumber('0')">0</button>
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="calculate()">=</button>
+            <button onclick="setOperation('+')">+</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let currentOperation = null;
+        let firstOperand = '';
+        let secondOperand = '';
+        let shouldResetDisplay = false;
+
+        function appendNumber(number) {
+            if (display.innerText === '0' || shouldResetDisplay) {
+                display.innerText = number;
+                shouldResetDisplay = false;
+            } else {
+                display.innerText += number;
+            }
+
+            if (currentOperation === null) {
+                firstOperand += number;
+            } else {
+                secondOperand += number;
+            }
+        }
+
+        function setOperation(operation) {
+            if (firstOperand === '') return;
+
+            if (secondOperand !== '') {
+                calculate();
+            }
+
+            currentOperation = operation;
+            shouldResetDisplay = true;
+        }
+
+        function clearDisplay() {
+            display.innerText = '0';
+            firstOperand = '';
+            secondOperand = '';
+            currentOperation = null;
+        }
+
+        function calculate() {
+            if (currentOperation === null || secondOperand === '') return;
+
+            let result;
+            let num1 = parseFloat(firstOperand);
+            let num2 = parseFloat(secondOperand);
+
+            switch (currentOperation) {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    result = num1 / num2;
+                    break;
+                default:
+                    return;
+            }
+
+            display.innerText = result;
+            firstOperand = result.toString();
+            secondOperand = '';
+            currentOperation = null;
+            shouldResetDisplay = true;
+        }
+    </script>
+</body>
+</html>
